@@ -110,7 +110,14 @@ public class Pacman extends Creature {
 			 * de classe pour ça) - Animer sa bouche ;)
 			 */
 		 
-		       
+			// Animation du pacman
+	        if (direction == "UP") {this.handleMouthOpening(PacManLauncher.UP);}
+	        if (direction == "DOWN") {this.handleMouthOpening(PacManLauncher.DOWN);}
+	        if (direction == "RIGHT") {this.handleMouthOpening(PacManLauncher.RIGHT);}
+	        if (direction == "LEFT") {this.handleMouthOpening(PacManLauncher.LEFT);}
+		
+	        
+	        //deplacement du pacman
 	        int[] crossMap = this.navigateInMap(direction);
 	        xMove = crossMap[0];
 	        yMove = crossMap[1];
@@ -120,16 +127,12 @@ public class Pacman extends Creature {
 	        yMove = crossMap[1];
 
 	        this.pacman.move(xMove, yMove);
+	        isMouthOpen = !isMouthOpen;
+	        if (isMouthOpen) {mouthAngle = MAX_MOUTH_ANGLE;}
+	        else {mouthAngle = MIN_MOUTH_ANGLE;}
 
 			
-	
-			/*
-			 * TODO Si le déplacement n'est possible, il faut pouvoir récupérer les
-			 * coordonnées en partant du principe que sa direction sera égale à la dernière
-			 * direction qui avait marché. Quasiment la même chose, juste que ça sera pas
-			 * direction qui sera utilisé, mais autre chose :) Faut toujours animer sa
-			 * bouche ceci dit !
-			 */
+		
 		
 	}
 
