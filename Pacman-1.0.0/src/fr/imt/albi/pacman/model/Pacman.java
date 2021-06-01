@@ -101,7 +101,7 @@ public class Pacman extends Creature {
 		int yMove = 0;
 		this.lastMovement = direction;
 
-		if (this.isMovePossible(direction)) {
+		
 			/*
 			 * TODO Si le déplacement est possible, il faut : - récupérer les nouvelles
 			 * coordonnées, - voir avec quoi on risque de se percuter avec ces nouvelles
@@ -111,18 +111,18 @@ public class Pacman extends Creature {
 			 */
 		 
 		       
-		        int[] crossMap = this.navigateInMap(direction);
-		        xMove = crossMap[0];
-		        yMove = crossMap[1];
+	        int[] crossMap = this.navigateInMap(direction);
+	        xMove = crossMap[0];
+	        yMove = crossMap[1];
 
-		        crossMap = this.checkCollision(direction, xMove, yMove);
-		        xMove = crossMap[0];
-		        yMove = crossMap[1];
+	        crossMap = this.checkCollision(direction, xMove, yMove);
+	        xMove = crossMap[0];
+	        yMove = crossMap[1];
 
-		        this.pacman.move(xMove, yMove);
-			 
+	        this.pacman.move(xMove, yMove);
+
 			
-		} else {
+	
 			/*
 			 * TODO Si le déplacement n'est possible, il faut pouvoir récupérer les
 			 * coordonnées en partant du principe que sa direction sera égale à la dernière
@@ -130,7 +130,7 @@ public class Pacman extends Creature {
 			 * direction qui sera utilisé, mais autre chose :) Faut toujours animer sa
 			 * bouche ceci dit !
 			 */
-		}
+		
 	}
 
 	/**
