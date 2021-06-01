@@ -40,6 +40,7 @@ public class Pacman extends Creature {
 		this.isEmpowered = false;
 		this.lastMovement = PacManLauncher.LEFT;
 		this.nextLifeThreshold = Pacman.LIFE_POINT_THRESHOLD;
+		
 	}
 
 	public void removeLife() {
@@ -98,6 +99,7 @@ public class Pacman extends Creature {
 	public void move(String direction) {
 		int xMove = 0;
 		int yMove = 0;
+		this.lastMovement = direction;
 
 		if (this.isMovePossible(direction)) {
 			/*
@@ -107,6 +109,19 @@ public class Pacman extends Creature {
 			 * déplacer - garder une trace du dernier déplacement effectué (y a un attribut
 			 * de classe pour ça) - Animer sa bouche ;)
 			 */
+		 
+		       
+		        int[] crossMap = this.navigateInMap(direction);
+		        xMove = crossMap[0];
+		        yMove = crossMap[1];
+
+		        crossMap = this.checkCollision(direction, xMove, yMove);
+		        xMove = crossMap[0];
+		        yMove = crossMap[1];
+
+		        this.pacman.move(xMove, yMove);
+			 
+			
 		} else {
 			/*
 			 * TODO Si le déplacement n'est possible, il faut pouvoir récupérer les
