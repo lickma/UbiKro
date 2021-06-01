@@ -48,11 +48,11 @@ public class GameMap {
 	 */
 	private final String mapFile;
 	/**
-	 * Le nombre de gomme pr√©sent sur la map
+	 * Le nombre de gomme prÈsent sur la map
 	 */
 	private int nbGom;
 	/**
-	 * La position sur la map de chaque fant√¥me en d√©but de niveau : Un liste de
+	 * La position sur la map de chaque fant√¥me en dÈbut de niveau : Un liste de
 	 * couple (x,y)
 	 */
 	private final ArrayList<Integer[]> ghosts;
@@ -65,7 +65,7 @@ public class GameMap {
 	}
 
 	/*******************************************************************
-	 * Un fichier map.txt d√©finira un niveau de jeu La premi√®re ligne contient les
+	 * Un fichier map.txt dÈfinira un niveau de jeu La premi√®re ligne contient les
 	 * parametre nbCase, couleur du mur ... # = un mur . = une gomme = une
 	 * super-gomme O = un chemin vide P = PacMan F = fantome
 	 *******************************************************************/
@@ -138,8 +138,8 @@ public class GameMap {
 			System.out.println(e);
 		}
 		assert this.nbGom > 0 : "Nombre de gommes nul";
-		assert this.pacmanX > 0 : "Pacman non initialis√©";
-		assert this.pacmanY > 0 : "Pacman non initialis√©";
+		assert this.pacmanX > 0 : "Pacman non initialisÈ";
+		assert this.pacmanY > 0 : "Pacman non initialisÈ";
 		assert this.wallColor == "blue" || this.wallColor == "green" || this.wallColor == "pink"
 				: "Mauvaise couleur de mur";
 	}
