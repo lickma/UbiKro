@@ -20,7 +20,7 @@ public class Score {
 			BufferedReader br = new BufferedReader(ipsr);
 			str = br.readLine();
 		} catch (IOException exception) {
-			System.out.println("Erreur lors de l'Ã©criture du score : " + exception.getMessage());
+			System.out.println("Erreur lors de l'écriture du score : " + exception.getMessage());
 		}
 		return str;
 	}
@@ -31,7 +31,7 @@ public class Score {
 			fw.write(score);
 			fw.close();
 		} catch (IOException exception) {
-			System.out.println("Erreur lors de l'Ã©criture du score : " + exception.getMessage());
+			System.out.println("Erreur lors de l'écriture du score : " + exception.getMessage());
 		}
 	}
 }

@@ -93,23 +93,23 @@ abstract class Creature {
 	public abstract int getSpeed();
 
 	/**
-	 * Cette m√©thode retourne la position √† laquelle se retrouve la cr√©ature selon
+	 * Cette mÈthode retourne la position ‡ laquelle se retrouve la crÈature selon
 	 * la direction qu'elle a choisie
 	 *
 	 * @param direction La direction choisie
 	 * @return Un tableau {x, y} des nouvelles positions
 	 */
 	protected int[] navigateInMap(String direction) {
-		// Le tableau qui contiendra le r√©sultat
+		// Le tableau qui contiendra le rÈsultat
 		int[] ret = new int[2];
-		// Les coordonn√©es mises √† jour de la cr√©ature
+		// Les coordonnÈes mises √† jour de la crÈature
 		int xMove = 0;
 		int yMove = 0;
-		// Les coordonn√©es actuelles de la cr√©ature
+		// Les coordonnÈes actuelles de la crÈature
 		int xPosition = this.getX();
 		int yPosition = this.getY();
 
-		// La vitesse de la cr√©ature
+		// La vitesse de la crÈature
 		int speed = this.getSpeed();
 		// Sa largeur (on divise par 4 parce que connerie avec les arcs de cercle)
 		int width = this.getWidth() / 4;
@@ -118,10 +118,14 @@ abstract class Creature {
 		// La largeur
 		int widthMap = Canvas.WIDTH;
 
-		// TODO Ici, il faut g√©rer l'√©volution des coordonn√©es en fonction de la
-		// direction choisie :)
-		if (direction.equals(PacManLauncher.UP) || direction.equals(PacManLauncher.DOWN)
-				|| direction.equals(PacManLauncher.LEFT) || direction.equals(PacManLauncher.RIGHT)) {
+		if (direction.equals(PacManLauncher.UP)) {
+			yMove -= speed;
+		} else if (direction.equals(PacManLauncher.DOWN)) {
+			yMove += speed;
+		} else if (direction.equals(PacManLauncher.LEFT)) {
+			xMove -= speed;
+		} else if (direction.equals(PacManLauncher.RIGHT)) {
+			xMove += speed;
 		}
 
 		ret[0] = xMove;

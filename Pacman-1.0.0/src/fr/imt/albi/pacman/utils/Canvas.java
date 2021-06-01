@@ -153,7 +153,7 @@ public class Canvas extends java.awt.Canvas {
 			this.shapes.get(shape).draw(this.graphic);
 		}
 		this.printString("Score : " + score, 10, 20);
-		this.printString("Vie : " + life, 10, 40);
+		this.printString("Vies : " + life, 10, 40);
 		this.printString("Meilleur score : " + meilleurScore, 240, 20);
 		this.canvas.repaint();
 		this.wait(125);
