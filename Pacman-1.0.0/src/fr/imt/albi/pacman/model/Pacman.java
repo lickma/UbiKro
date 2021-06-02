@@ -29,7 +29,8 @@ public class Pacman extends Creature {
 	private int currentLife;
 	private int currentScore;
 	private int nextLifeThreshold;
-
+	private boolean dirLock;
+	
 	public Pacman(int size, int x, int y) {
 		this.pacman = new ArcCircle(size, x, y, PACMAN_COLOR, 0, 360);
 
@@ -40,6 +41,7 @@ public class Pacman extends Creature {
 		this.isEmpowered = false;
 		this.lastMovement = PacManLauncher.LEFT;
 		this.nextLifeThreshold = Pacman.LIFE_POINT_THRESHOLD;
+		this.dirLock = false;
 		
 	}
 
@@ -111,16 +113,21 @@ public class Pacman extends Creature {
 			 * de classe pour ça) - Animer sa bouche ;)
 			 */
 		 
-			// Animation du pacman
-	        if (direction == "UP") {this.handleMouthOpening(PacManLauncher.UP);}
-	        if (direction == "DOWN") {this.handleMouthOpening(PacManLauncher.DOWN);}
-	        if (direction == "RIGHT") {this.handleMouthOpening(PacManLauncher.RIGHT);}
-	        if (direction == "LEFT") {this.handleMouthOpening(PacManLauncher.LEFT);}
-	        isMouthOpen = !isMouthOpen;
-	        if (isMouthOpen) {mouthAngle = MAX_MOUTH_ANGLE;}
-	        else {mouthAngle = MIN_MOUTH_ANGLE;}
+			
 	        
-	      
+	        if (lastMovement == "DOWN" || lastMovement == "UP") {
+	        	if (!isMovePossible("RIGHT") && !isMovePossible("LEFT")) {
+	        		dirLock = true; 
+	        	}
+	        	else {dirLock = false;}
+	        }
+	        else if (lastMovement == "RIGHT" || lastMovement == "LEFT") {
+	        	if (!isMovePossible("UP") &&!isMovePossible("DOWN")) {
+	        		dirLock = true;        	
+	        	}
+	        	else {dirLock = false;}
+	        }
+	        
 	        //deplacement du pacman
 	        int[] crossMap = this.navigateInMap(direction);
 	        xMove = crossMap[0];
@@ -129,26 +136,27 @@ public class Pacman extends Creature {
 	        crossMap = this.checkCollision(direction, xMove, yMove);
 	        xMove = crossMap[0];
 	        yMove = crossMap[1];
-	       
-	        
+   
 	        //teleporte quand sur le bord de la map
 	        if (pacman.getX() == 0 && direction == "LEFT") {xMove = 500;}
 	        if (pacman.getX() == 500 && direction == "RIGHT") {xMove = -500;}
 	        
 	        
+	        
+	        if (dirLock) {direction = lastMovement;}
+	        // Animation du pacman
+	        if (direction == "UP") {this.handleMouthOpening(PacManLauncher.UP);}
+	        if (direction == "DOWN") {this.handleMouthOpening(PacManLauncher.DOWN);}
+	        if (direction == "RIGHT") {this.handleMouthOpening(PacManLauncher.RIGHT);}
+	        if (direction == "LEFT") {this.handleMouthOpening(PacManLauncher.LEFT);}
+	        isMouthOpen = !isMouthOpen;
+	        if (isMouthOpen) {mouthAngle = MAX_MOUTH_ANGLE;}
+	        else {mouthAngle = MIN_MOUTH_ANGLE;}
+	        
 	        this.pacman.move(xMove, yMove);
-	        
-	        if (lastMovement == "DOWN" || lastMovement == "UP") {
-	        	if (!isMovePossible("RIGHT") ||!isMovePossible("LEFT")) {
-	        		if (lastMovement == "UP") {this.handleMouthOpening(PacManLauncher.UP);}
-	        		if (lastMovement == "DOWN") {this.handleMouthOpening(PacManLauncher.DOWN);}
-	        		
-	        		this.pacman.move(xMove, yMove);
-	        	}
-	        }
-	        
+
 	        this.lastMovement = direction;
-		
+	        System.out.print(dirLock);
 	}
 
 	/**
