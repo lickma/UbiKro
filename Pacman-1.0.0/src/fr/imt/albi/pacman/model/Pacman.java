@@ -44,32 +44,33 @@ public class Pacman extends Creature {
 	}
 
 	public void removeLife() {
-		// TODO Méthode qui gère le retrait d'une vie à Pacman
-	}
+        this.currentLife -= 1;
+    }
 
-	public int getCurrentLife() {
-		return this.currentLife;
-	}
+    public int getCurrentLife() {
+        return this.currentLife;
+    }
 
-	public void updateScoreFood() {
-		// TODO Là, si Pacman a reçu un power-up, faut incrémenter le score comme il se
-		// doit.
-	}
+    public void updateScoreFood() {
+        this.currentScore += Food.POWER_UP_SCORE;
+    }
 
-	private void checkIfNewLife() {
-		// TODO Là, faut vérifier si le Pacman a atteint la limite pour avoir une vie
-		// supplémentaire :)
-	}
+    private void checkIfNewLife() {
+        if (this.currentScore >= this.nextLifeThreshold) {
+            this.currentLife += 1;
+            this.nextLifeThreshold += Pacman.LIFE_POINT_THRESHOLD;
+        }
+    }
 
-	public void updateScoreGhost() {
-		// TODO Là, si Pacman bouffe un fantome, faut incrémenter le score comme il faut
-		// aussi.
-	}
+    public void updateScoreGhost() {
+        this.currentScore += Ghost.GHOST_SCORE;
+    }
 
-	public int getCurrentScore() {
-		return this.currentScore;
-	}
+    public int getCurrentScore() {
+        return this.currentScore;
+    }
 
+    
 	@Override
 	public int getSpeed() {
 		return Pacman.SPEED_PACMAN;
@@ -99,7 +100,7 @@ public class Pacman extends Creature {
 	public void move(String direction) {
 		int xMove = 0;
 		int yMove = 0;
-		this.lastMovement = direction;
+		
 
 		
 			/*
@@ -115,8 +116,11 @@ public class Pacman extends Creature {
 	        if (direction == "DOWN") {this.handleMouthOpening(PacManLauncher.DOWN);}
 	        if (direction == "RIGHT") {this.handleMouthOpening(PacManLauncher.RIGHT);}
 	        if (direction == "LEFT") {this.handleMouthOpening(PacManLauncher.LEFT);}
-		
+	        isMouthOpen = !isMouthOpen;
+	        if (isMouthOpen) {mouthAngle = MAX_MOUTH_ANGLE;}
+	        else {mouthAngle = MIN_MOUTH_ANGLE;}
 	        
+	      
 	        //deplacement du pacman
 	        int[] crossMap = this.navigateInMap(direction);
 	        xMove = crossMap[0];
@@ -125,14 +129,25 @@ public class Pacman extends Creature {
 	        crossMap = this.checkCollision(direction, xMove, yMove);
 	        xMove = crossMap[0];
 	        yMove = crossMap[1];
-
+	       
+	        
+	        //teleporte quand sur le bord de la map
+	        if (pacman.getX() == 0 && direction == "LEFT") {xMove = 500;}
+	        if (pacman.getX() == 500 && direction == "RIGHT") {xMove = -500;}
+	        
+	        
 	        this.pacman.move(xMove, yMove);
-	        isMouthOpen = !isMouthOpen;
-	        if (isMouthOpen) {mouthAngle = MAX_MOUTH_ANGLE;}
-	        else {mouthAngle = MIN_MOUTH_ANGLE;}
-
-			
-		
+	        
+	        if (lastMovement == "DOWN" || lastMovement == "UP") {
+	        	if (!isMovePossible("RIGHT") ||!isMovePossible("LEFT")) {
+	        		if (lastMovement == "UP") {this.handleMouthOpening(PacManLauncher.UP);}
+	        		if (lastMovement == "DOWN") {this.handleMouthOpening(PacManLauncher.DOWN);}
+	        		
+	        		this.pacman.move(xMove, yMove);
+	        	}
+	        }
+	        
+	        this.lastMovement = direction;
 		
 	}
 
@@ -219,19 +234,21 @@ public class Pacman extends Creature {
 
 	@Override
 	protected void interactWithFood(Figure[][] map, int i, int j) {
-		Figure f = map[i][j];
-		if (f instanceof Food) {
-			Food food = (Food) f;
-			if (food.getFood() != null) {
-				/*
-				 * TODO Ici, il faut: - Changer le food en null (y a un setFood...) - Redessiner
-				 * le food (.draw()) - Et après, remettre à jour la map en updatant la bouffe
-				 * qu'il y avait dedans - Mettre à jour le score - Sachant qu'un food peut être
-				 * un powerup, y a un truc à gérer :)
-				 */
-			}
-		}
-	}
+        Figure f = map[i][j];
+        if (f instanceof Food) {
+            Food food = (Food) f;
+            if (food.getFood() != null) {
+                
+                food.setFood(null);
+                food.draw();
+                this.gameMap.pickFood();
+                this.updateScoreFood();
+                if (food.isPowerUp()) {
+                    this.isEmpowered = true;
+                }
+            }
+        }
+    }
 
 	public boolean getIsEmpowered() {
 		return this.isEmpowered;
