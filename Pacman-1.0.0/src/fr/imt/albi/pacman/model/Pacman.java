@@ -126,7 +126,6 @@ public class Pacman extends Creature {
 			
 			this.pacman.move(xMove, yMove);
 			this.lastMovement = direction;
-			System.out.println("OUI");
 			
 		} else {
 
@@ -149,7 +148,6 @@ public class Pacman extends Creature {
 			yMove = crossMap[1];
 			
 			this.pacman.move(xMove, yMove);
-			System.out.println("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOPE");
 		}
 	}
 
