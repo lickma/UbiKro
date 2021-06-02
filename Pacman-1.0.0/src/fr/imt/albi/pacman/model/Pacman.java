@@ -25,11 +25,11 @@ public class Pacman extends Creature {
 	private boolean isMouthOpen;
 	private boolean isEmpowered;
 	private String lastPosition;
-	private String lastMovement;
+	public static String lastMovement;
 	private int currentLife;
 	private int currentScore;
 	private int nextLifeThreshold;
-	private boolean dirLock;
+	public static boolean dirLock;
 	
 	public Pacman(int size, int x, int y) {
 		this.pacman = new ArcCircle(size, x, y, PACMAN_COLOR, 0, 360);
@@ -103,8 +103,8 @@ public class Pacman extends Creature {
 		int xMove = 0;
 		int yMove = 0;
 		
-
-		
+	
+		if (this.isMovePossible(direction)) {
 			/*
 			 * TODO Si le déplacement est possible, il faut : - récupérer les nouvelles
 			 * coordonnées, - voir avec quoi on risque de se percuter avec ces nouvelles
@@ -112,51 +112,51 @@ public class Pacman extends Creature {
 			 * déplacer - garder une trace du dernier déplacement effectué (y a un attribut
 			 * de classe pour ça) - Animer sa bouche ;)
 			 */
-		 
 			
-	        
-	        if (lastMovement == "DOWN" || lastMovement == "UP") {
-	        	if (!isMovePossible("RIGHT") && !isMovePossible("LEFT")) {
-	        		dirLock = true; 
-	        	}
-	        	else {dirLock = false;}
-	        }
-	        else if (lastMovement == "RIGHT" || lastMovement == "LEFT") {
-	        	if (!isMovePossible("UP") &&!isMovePossible("DOWN")) {
-	        		dirLock = true;        	
-	        	}
-	        	else {dirLock = false;}
-	        }
-	        
-	        //deplacement du pacman
-	        int[] crossMap = this.navigateInMap(direction);
-	        xMove = crossMap[0];
-	        yMove = crossMap[1];
+			// nouvelles coordonn�es
+			 int [] crossMap = this.navigateInMap(direction);
+			 xMove = crossMap[0];
+			 yMove = crossMap[1];
+			 
+			 //check les collisions et recalcul des coordon�es
+			 crossMap = this.checkCollision(direction, xMove, yMove);
+			 xMove = crossMap[0];
+			 yMove = crossMap[1];
+			 
+			 
+			
+		} else {
+			/*
+			 * TODO Si le déplacement n'est possible, il faut pouvoir récupérer les
+			 * coordonnées en partant du principe que sa direction sera égale à la dernière
+			 * direction qui avait marché. Quasiment la même chose, juste que ça sera pas
+			 * direction qui sera utilisé, mais autre chose :) Faut toujours animer sa
+			 * bouche ceci dit !
+			 */
+			 int [] crossMap = this.navigateInMap(lastMovement);
+			 xMove = crossMap[0];
+			 yMove = crossMap[1];
+			 
+			 //check les collisions et recalcul des coordon�es
+			 crossMap = this.checkCollision(lastMovement, xMove, yMove);
+			 xMove = crossMap[0];
+			 yMove = crossMap[1];
+			
+		}
+		
+		// Animation du pacman
+        if (direction == "UP") {this.handleMouthOpening(PacManLauncher.UP);}
+        if (direction == "DOWN") {this.handleMouthOpening(PacManLauncher.DOWN);}
+        if (direction == "RIGHT") {this.handleMouthOpening(PacManLauncher.RIGHT);}
+        if (direction == "LEFT") {this.handleMouthOpening(PacManLauncher.LEFT);}
+        isMouthOpen = !isMouthOpen;
+        if (isMouthOpen) {mouthAngle = MAX_MOUTH_ANGLE;}
+        else {mouthAngle = MIN_MOUTH_ANGLE;}
+        
+        this.pacman.move(xMove, yMove);
 
-	        crossMap = this.checkCollision(direction, xMove, yMove);
-	        xMove = crossMap[0];
-	        yMove = crossMap[1];
-   
-	        //teleporte quand sur le bord de la map
-	        if (pacman.getX() == 0 && direction == "LEFT") {xMove = 500;}
-	        if (pacman.getX() == 500 && direction == "RIGHT") {xMove = -500;}
-	        
-	        
-	        
-	        if (dirLock) {direction = lastMovement;}
-	        // Animation du pacman
-	        if (direction == "UP") {this.handleMouthOpening(PacManLauncher.UP);}
-	        if (direction == "DOWN") {this.handleMouthOpening(PacManLauncher.DOWN);}
-	        if (direction == "RIGHT") {this.handleMouthOpening(PacManLauncher.RIGHT);}
-	        if (direction == "LEFT") {this.handleMouthOpening(PacManLauncher.LEFT);}
-	        isMouthOpen = !isMouthOpen;
-	        if (isMouthOpen) {mouthAngle = MAX_MOUTH_ANGLE;}
-	        else {mouthAngle = MIN_MOUTH_ANGLE;}
-	        
-	        this.pacman.move(xMove, yMove);
-
-	        this.lastMovement = direction;
-	        System.out.print(dirLock);
+        this.lastMovement = direction;
+        //System.out.print(dirLock);
 	}
 
 	/**

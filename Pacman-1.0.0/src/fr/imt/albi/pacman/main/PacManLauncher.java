@@ -93,6 +93,7 @@ public class PacManLauncher {
 		Canvas c = Canvas.getCanvas();
 		c.resetMove();
 		while (this.maps.getNbGom() > 0 && this.pacman.getCurrentLife() > 0) {
+		
 			if (c.isUpPressed()) {
 				this.pacman.move(UP);
 			} else if (c.isDownPressed()) {
@@ -102,7 +103,8 @@ public class PacManLauncher {
 			} else if (c.isRightPressed()) {
 				this.pacman.move(RIGHT);
 			}
-
+			
+		
 			if (this.pacman.getIsEmpowered()) {
 				for (Ghost g : this.ghost) {
 					g.setFearState();

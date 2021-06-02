@@ -127,6 +127,10 @@ abstract class Creature {
 		} else if (direction.equals(PacManLauncher.RIGHT)) {
 			xMove += speed;
 		}
+		
+        //teleporte quand sur le bord de la map
+        if (getX() == 0 && direction == "LEFT") {xMove = Canvas.WIDTH;}
+        if (getX() == Canvas.WIDTH && direction == "RIGHT") {xMove = -Canvas.WIDTH;}
 
 		ret[0] = xMove;
 		ret[1] = yMove;
