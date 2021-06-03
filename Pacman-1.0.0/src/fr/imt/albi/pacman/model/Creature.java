@@ -127,10 +127,11 @@ abstract class Creature {
 		} else if (direction.equals(PacManLauncher.RIGHT)) {
 			xMove += speed;
 		}
-		
-        //teleporte quand sur le bord de la map
-        if (getX() == 0 && direction == "LEFT") {xMove = Canvas.WIDTH;}
-        if (getX() == Canvas.WIDTH && direction == "RIGHT") {xMove = -Canvas.WIDTH;}
+		//TP bords de map
+		if (this.getX() == 0 && direction == "LEFT") {xMove = widthMap;}
+        if (this.getX() == widthMap && direction == "RIGHT") {xMove = -widthMap;}
+        if (this.getY() == 0 && direction == "UP") {xMove = heightMap;}
+        if (this.getY() == heightMap && direction == "DOWN") {xMove = -heightMap;}
 
 		ret[0] = xMove;
 		ret[1] = yMove;
@@ -162,4 +163,45 @@ abstract class Creature {
 
 		return result;
 	}
+	
+	public boolean isMovePossible(String direction) {
+        boolean canMove = false;
+        Figure[][] map = this.gameMap.getMap();
+
+        if (this.getX() % this.gameMap.getSizeCase() == 0 && this.getY() % this.gameMap.getSizeCase() == 0) {
+            int[] position = this.getColumnAndRow();
+            int xPosition = position[0];
+            int yPosition = position[1];
+
+            Figure fUp = map[yPosition - 1][xPosition];
+            Figure fDown = map[yPosition + 1][xPosition];
+            Figure fleft = map[yPosition][xPosition - 1];
+            Figure fRight = map[yPosition][xPosition + 1];
+
+            switch (direction) {
+                case PacManLauncher.UP:
+                    if (!(fUp instanceof Wall)) {
+                        canMove = true;
+                    }
+                    break;
+                case PacManLauncher.DOWN:
+                    if (!(fDown instanceof Wall)) {
+                        canMove = true;
+                    }
+                    break;
+                case PacManLauncher.LEFT:
+                    if (!(fleft instanceof Wall)) {
+                        canMove = true;
+                    }
+                    break;
+                case PacManLauncher.RIGHT:
+                    if (!(fRight instanceof Wall)) {
+                        canMove = true;
+                    }
+                    break;
+            }
+        }
+
+        return canMove;
+    }
 }
