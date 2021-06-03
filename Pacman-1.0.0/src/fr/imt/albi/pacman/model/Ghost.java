@@ -1,9 +1,12 @@
 package fr.imt.albi.pacman.model;
 
 import fr.imt.albi.pacman.main.PacManLauncher;
+//import fr.imt.albi.pacman.model.Pacman;
+//import fr.imt.albi.pacman.model.GameMap;
 import fr.imt.albi.pacman.utils.Figure;
 import fr.imt.albi.pacman.utils.GhostSkin;
 import fr.imt.albi.pacman.utils.Wall;
+import java.util.*;
 
 import java.util.ArrayList;
 
@@ -27,8 +30,8 @@ public class Ghost extends Creature {
         this.ghostSkin = new GhostSkin(size, x, y, color);
     }
 
-    public void move() {
-        if (this.counterFear == 0) {
+    public void move(Pacman p) { // TODO modifié par moi
+    	if (this.counterFear == 0) {
             this.setNormalState();
         }
         if (this.counterFear % 2 == 1 || this.counterFear == 0) {
@@ -53,7 +56,67 @@ public class Ghost extends Creature {
                 }
                 this.initUTurnCounter();
             } else {
-                checkCrossing(this.previousMove);
+            	double alea = Math.random();
+            	if (alea < 0.3) { //30% de bouger random
+            		this.checkCrossing(this.previousMove);
+            	} else {
+            		int xPos = this.getX();
+	            	int yPos = this.getY();  
+	            	int speed = this.SPEED_GHOST;
+	            	
+	                double distance = Math.sqrt(Math.pow(this.getX() - p.getX(), 2) + Math.pow(this.getY() - p.getY(), 2));
+	                double distanceRight = Math.sqrt(Math.pow(xPos+speed - p.getX(), 2) + Math.pow(this.getY() - p.getY(), 2));
+	                double distanceLeft = Math.sqrt(Math.pow(xPos-speed - p.getX(), 2) + Math.pow(yPos - p.getY(), 2));
+	                double distanceUp = Math.sqrt(Math.pow(xPos - p.getX(), 2) + Math.pow(yPos-speed - p.getY(), 2));
+	                double distanceDown = Math.sqrt(Math.pow(xPos - p.getX(), 2) + Math.pow(yPos+speed - p.getY(), 2));
+	                //double plusCourt = Math.min(Math.min(distanceRight, distanceLeft), Math.min(distanceUp, distanceDown));
+
+	                int cpt = 0;
+	                ArrayList<Double> listDistances = new ArrayList<Double>();
+	                listDistances.add(distanceRight);
+	                listDistances.add(distanceLeft);
+	                listDistances.add(distanceDown);
+	                listDistances.add(distanceUp);
+	                Collections.sort(listDistances);
+
+	                if (this.counterFear == 0) { // S'il est en colere parce que Pacman vandalise le quartier
+	                	while (cpt < 4) {
+		                	if (listDistances.get(cpt) == distanceRight && this.isMovePossible(PacManLauncher.RIGHT)) {
+		                		this.move(PacManLauncher.RIGHT);//checkCrossing(PacManLauncher.RIGHT);//
+		                		cpt = 4;
+		                	} else if (listDistances.get(cpt) == distanceLeft && this.isMovePossible(PacManLauncher.LEFT)) {
+		                		this.move(PacManLauncher.LEFT);//checkCrossing(PacManLauncher.LEFT);//
+		                		cpt = 4;
+		                	} else if (listDistances.get(cpt) == distanceDown && this.isMovePossible(PacManLauncher.DOWN)) {
+		                		this.move(PacManLauncher.DOWN);//checkCrossing(PacManLauncher.DOWN);//
+		                		cpt = 4;
+		                	} else if (listDistances.get(cpt) == distanceUp && this.isMovePossible(PacManLauncher.UP)) {
+		                		this.move(PacManLauncher.UP);//checkCrossing(PacManLauncher.UP);//
+		                		cpt = 4;
+		                	} else {
+		                		cpt++;
+		                	}
+	                	}
+	                	this.checkCrossing(this.previousMove);
+	                } else { // Si le fantome a peur
+	                	if (listDistances.get(cpt) == distanceRight && this.isMovePossible(PacManLauncher.LEFT)) {
+	                		this.move(PacManLauncher.LEFT);//checkCrossing(PacManLauncher.RIGHT);//
+	                		cpt = 4;
+	                	} else if (listDistances.get(cpt) == distanceLeft && this.isMovePossible(PacManLauncher.RIGHT)) {
+	                		this.move(PacManLauncher.RIGHT);//checkCrossing(PacManLauncher.LEFT);//
+	                		cpt = 4;
+	                	} else if (listDistances.get(cpt) == distanceDown && this.isMovePossible(PacManLauncher.UP)) {
+	                		this.move(PacManLauncher.UP);//checkCrossing(PacManLauncher.DOWN);//
+	                		cpt = 4;
+	                	} else if (listDistances.get(cpt) == distanceUp && this.isMovePossible(PacManLauncher.DOWN)) {
+	                		this.move(PacManLauncher.DOWN);//checkCrossing(PacManLauncher.UP);//
+	                		cpt = 4;
+	                	} else {
+	                		cpt++;
+	                	}
+                	}
+                	this.checkCrossing(this.previousMove);
+	            }
             }
         } else {
             this.counterFear--;
@@ -196,11 +259,11 @@ public class Ghost extends Creature {
     }
 
     public void chooseMove(String toward, ArrayList<Figure> listF, Figure fUp, Figure fDown, Figure fLeft, Figure fRight) {
-        boolean result = false;
+        //boolean result = false;
         ArrayList<Figure> toGo = new ArrayList<Figure>();
 
         for (Figure f : listF) {
-            if (f.getClass().getName().compareTo("view.Wall") != 0) {
+            if (!(f instanceof Wall)) {
                 toGo.add(f);
             }
         }
